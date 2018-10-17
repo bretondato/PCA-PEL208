@@ -71,7 +71,7 @@ def eigen(covMatrix):
     return np.linalg.eig(covMatrix)
 
 
-def PCA(matrix):
+def PCA(matrix, trsh):
     print("Esta a função para executar o PCA")
     originalMatrix = matrix
     print("Original Matrix: ", originalMatrix)
@@ -91,39 +91,44 @@ def PCA(matrix):
 
     featureVector = []
 
+    r = 0.0
+
+
+
+    print(np.sum(eingen[0]))
+
+    vectChoice = []
+
+    for i in range(0, len(eingen[0])):
+        print(eingen[0][i]/np.sum(eingen[0]))
+        p = eingen[0][i]/np.sum(eingen[0])
+
+        if (p <= trsh):
+            vectChoice.append((i, p))
+
+    vectChoice.sort(key=lambda tup: tup[1], reverse=True)
+
+
     if len(matrix) == 2:
-        featureVector = eigenVect[0]
+        featureVector = eigenVect[vectChoice[0][0]]
     elif len(matrix) == 3:
-        featureVector.append(eigenVect[1])
-        featureVector.append(eigenVect[2])
+        featureVector.append(eigenVect[vectChoice[0][0]])
+        featureVector.append(eigenVect[vectChoice[1][0]])
     elif len(matrix) > 3:
-        featureVector.append(eigenVect[3])
-        featureVector.append(eigenVect[0])
-        featureVector.append(eigenVect[1])
+        featureVector.append(eigenVect[vectChoice[0][0]])
+        featureVector.append(eigenVect[vectChoice[1][0]])
+        featureVector.append(eigenVect[vectChoice[2][0]])
 
 
 
     print("Feature Vector: ", featureVector)
     print()
 
-    #matrixT = np.transpose(originalMatrix)
-    #print("Matrix Tranpose: \n", matrix)
-    #rint()
-
     fData = np.matmul(featureVector, matrix)
 
-    # print(featureVector)
-
-    # for i in range(0, len(featureVector)):
-    #     featureVector[i] = 1/featureVector[i]
-
-    #featureVector2 = np.invert(eingen)
-
-
-    #fData = fData.view(np.complex)
-
     print(fData)
-    print(featureVector)
+    #print(featureVector)
+
 
     return (fData, eingen)
 
@@ -150,16 +155,13 @@ def waterOption():
 
     matrix = detectVectos(aw)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
     mc1 = []
     mc2 = []
     print(pca)
 
     print(pca[0])
-
-    print('Vector 1', pca[1][1][0])
-    print('Vector 2', pca[1][1][1])
 
     fig = plt.figure(figsize=(10, 5), dpi=70, facecolor='w', edgecolor='k')
     ax = fig.add_subplot(1, 2, 1)
@@ -187,7 +189,7 @@ def booksOption():
 
     print(matrix)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
 
     fig = plt.figure(figsize=(20, 10), dpi= 90, facecolor='w', edgecolor='k')
@@ -226,7 +228,7 @@ def censusOption():
 
     matrix = detectVectos(uc)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
     mc1 = []
     mc2 = []
@@ -259,7 +261,7 @@ def shoesOption():
 
     print( matrix)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
     mc1 = []
     mc2 = []
@@ -291,7 +293,7 @@ def haldOption():
 
     matrix = detectVectos(h)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
     fig = plt.figure(figsize=(10, 10), dpi=90, facecolor='w', edgecolor='k')
     ax = fig.add_subplot(1, 1, 1, projection='3d')
@@ -313,7 +315,7 @@ def exempleDataOption():
 
     matrix = detectVectos(ex)
 
-    pca = PCA(matrix)
+    pca = PCA(matrix, .98)
 
     mc1 = []
     mc2 = []
